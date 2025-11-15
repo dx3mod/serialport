@@ -1,0 +1,3 @@
+(executables
+ (names send_gcodes)
+ (libraries serialport.lwt lwt.unix))

@@ -1,2 +1,7 @@
 (library
- (public_name serialport))
+ (public_name serialport)
+ (libraries
+  (select
+   platform_depend_intf.ml
+   from
+   (serialport_posix -> platform_depend_intf.posix.ml))))

@@ -1,0 +1,6 @@
+(library
+ (name serialport_posix)
+ (package serialport)
+ (enabled_if
+  (= %{os_type} "Unix"))
+ (libraries unix))

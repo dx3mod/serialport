@@ -1,0 +1,4 @@
+(library
+ (name serialport_lwt)
+ (public_name serialport.lwt)
+ (libraries serialport lwt.unix))
