@@ -10,5 +10,5 @@ module type S = sig
 end
 
 (* for checking signature *)
-module T : S = Platform_depend_intf
-include T
+module _ : S = Platform_depend_intf
+include Platform_depend_intf
