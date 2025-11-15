@@ -1,32 +1,32 @@
+open Lwt.Syntax
 module Platform_depend = Serialport.Platform_depend
+module Mode = Serialport.Mode
 
 type t = {
-  native_port : Platform_depend.serial_port;
+  fd : Lwt_unix.file_descr;
+      (** Unix fd and Windows HANDLE representation hacks. *)
   ic : Lwt_io.input_channel;
   oc : Lwt_io.output_channel;
 }
 
-let make native_port =
-  (* Hacks for Unix. xd. Fix it! *)
-  let oc = Lwt_io.of_unix_fd ~mode:Output @@ Obj.magic native_port in
-  let ic = Lwt_io.of_unix_fd ~mode:Input @@ Obj.magic native_port in
+let make fd =
+  let oc = Lwt_io.of_fd ~mode:Output fd in
+  let ic = Lwt_io.of_fd ~mode:Input fd in
 
-  { native_port; oc; ic }
+  { fd; oc; ic }
 
-let close_communication { native_port; _ } =
-  Platform_depend.close_serial_port native_port
+let close_communication { fd; _ } = Lwt_unix.close fd
 
-let open_communication ?switch ~mode port =
-  let native_port = Platform_depend.open_serial_port port in
-  Platform_depend.setup_serial_port_generic native_port
-    ~baud_rate:mode.Serialport.Mode.baud_rate;
+let open_communication ?switch ~mode port_location =
+  let* fd = Lwt_unix.openfile port_location [ O_RDWR; O_NONBLOCK ] 0o000 in
 
-  let serial_port = make native_port in
-  (* Add auto-closing features. *)
-  Lwt_switch.add_hook switch (fun () ->
-      close_communication serial_port;
-      Lwt.return_unit);
+  Platform_depend.setup_serial_port_generic
+    ~baud_rate:mode.Serialport.Mode.baud_rate
+    (Lwt_unix.unix_file_descr fd);
 
-  serial_port
+  let serial_port = make fd in
+  Lwt_switch.add_hook switch (fun () -> close_communication serial_port);
+
+  Lwt.return serial_port
 
 let to_channels { oc; ic; _ } = (ic, oc)

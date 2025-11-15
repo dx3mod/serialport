@@ -2,7 +2,7 @@
 
 # serialport
 
-A cross-platform serial port communication library for modern OCaml that supports POSIX and Windows systems, as well as different I/O libraries (i.e., Lwt/Async/EIO for concurrency or a simple Unix interface).
+A cross-platform serial port communication library for modern OCaml that supports POSIX and Windows systems, as well as different I/O libraries (i.e., Lwt/Async/Eio for concurrency or a simple Unix interface).
 
 [Documentation]()
 

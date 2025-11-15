@@ -1,4 +1,5 @@
 open Lwt.Syntax
+open Lwt.Infix
 
 let send_command serial_port command =
   let ic, oc = Serialport_lwt.to_channels serial_port in
@@ -6,7 +7,7 @@ let send_command serial_port command =
   let* _ = Lwt_io.write_line oc command in
   let* line = Lwt_io.read_line ic in
 
-  Lwt_io.printlf "received for %s" line
+  Lwt_io.printlf "received for %s\n" line
 
 let demo connection =
   let commands =
@@ -24,5 +25,6 @@ let () =
   Lwt_main.run
     begin
       Lwt_switch.with_switch @@ fun switch ->
-      Serialport_lwt.open_communication ~switch ~mode:{ baud_rate } port |> demo
+      Serialport_lwt.open_communication ~switch ~mode:{ baud_rate } port
+      >>= demo
     end
