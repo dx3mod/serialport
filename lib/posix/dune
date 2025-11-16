@@ -3,4 +3,4 @@
  (package serialport)
  (enabled_if
   (= %{os_type} "Unix"))
- (libraries unix))
+ (libraries unix mode))

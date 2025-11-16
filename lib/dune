@@ -1,6 +1,7 @@
 (library
  (public_name serialport)
  (libraries
+  mode
   (select
    platform_depend_intf.ml
    from

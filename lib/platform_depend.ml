@@ -4,7 +4,7 @@ module type S = sig
   and serial_port_options
 
   val setup_serial_port : serial_port -> serial_port_options -> unit
-  val setup_serial_port_generic : serial_port -> baud_rate:int -> unit
+  val setup_serial_port_generic : serial_port -> Mode.t -> unit
 end
 
 (* for checking signature *)

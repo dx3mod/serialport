@@ -18,7 +18,7 @@ let close_communication { native_port; _ } = Unix.close native_port
 
 let open_communication ~mode port_location =
   let fd = Unix.openfile port_location [ O_RDWR; O_NONBLOCK ] 0o000 in
-  Platform_depend.setup_serial_port_generic ~baud_rate:mode.Mode.baud_rate fd;
+  Platform_depend.setup_serial_port_generic fd mode;
   make ~port_location fd
 
 let with_open_communication ~mode port f =
