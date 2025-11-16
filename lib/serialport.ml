@@ -1,33 +1,19 @@
-module Platform_depend = Platform_depend
+(** {1 Configuration} *)
+
 module Mode = Mode
+(** [Mode] module describes a {{!Platform_depend.S.serial_port}serial port}
+    configuration. *)
 
-type t = {
-  native_port : Platform_depend.serial_port;
-  ic : in_channel;
-  oc : out_channel;
-  port_location : string;
-}
+(** {1 Errors} *)
 
-let make ~port_location native_port =
-  let ic = Unix.in_channel_of_descr native_port in
-  let oc = Unix.out_channel_of_descr native_port in
+include Errors
 
-  { native_port; ic; oc; port_location }
+(** {1 Low level}
 
-let close_communication { native_port; _ } = Unix.close native_port
+    The native implementation for target system. *)
 
-let open_communication ~mode port_location =
-  let fd = Unix.openfile port_location [ O_RDWR; O_NONBLOCK ] 0o000 in
-  Platform_depend.setup_serial_port_generic fd mode;
-  make ~port_location fd
+module Platform_depend = Platform_depend
 
-let with_open_communication ~mode port f =
-  let serial_port = open_communication ~mode port in
-  Fun.protect
-    (fun () -> f serial_port)
-    ~finally:(fun () -> close_communication serial_port)
+(** {1 Utils} *)
 
-let to_channels { oc; ic; _ } = (ic, oc)
-
-let pp fmt { port_location; _ } =
-  Format.fprintf fmt "SerialPort(%s)" port_location
+module Utils = Utils

@@ -6,7 +6,7 @@ type t
 
 val open_communication :
   ?switch:Lwt_switch.t -> mode:Serialport.Mode.t -> string -> t Lwt.t
-(** [open_communication ?switch ~mode port_location] open opens the
+(** [open_communication ?switch ~mode port_name] open opens the
     {{!Platform_depend.S.serial_port}serial port} using the specified
     {{!Mode}[mode]s} configuration.
 

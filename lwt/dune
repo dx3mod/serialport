@@ -1,4 +1,7 @@
 (library
  (name serialport_lwt)
  (public_name serialport.lwt)
+ (optional)
+ (modules serialport_lwt)
+ (enabled_if %{lib-available:lwt})
  (libraries serialport lwt.unix))

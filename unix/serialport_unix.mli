@@ -6,12 +6,12 @@ type t
 (** Interface for a opened {{!Platform_depend.S.serial_port}serial port}. *)
 
 val open_communication : mode:Mode.t -> string -> t
-(** [open_communication ~mode port_location] open opens the
+(** [open_communication ~mode port_name] open opens the
     {{!Platform_depend.S.serial_port}serial port} using the specified
     {{!Mode}[mode]s} configuration. *)
 
 val with_open_communication : mode:Mode.t -> string -> (t -> 'a) -> 'a
-(** [with_open_communication ~mode port_location callback] similar to
+(** [with_open_communication ~mode port_name callback] similar to
     {!open_communication} but with an auto-{{!close_communication}closing}
     mechanism. *)
 
@@ -26,14 +26,6 @@ val to_channels : t -> in_channel * out_channel
 
     @return Channel abstraction pair for input/output tasks. *)
 
-(** {1 Configuration} *)
-
-module Mode = Mode
-
 (** {1 Pretty print} *)
 
 val pp : Format.formatter -> t -> unit
-
-(** {1 Low level} *)
-
-module Platform_depend = Platform_depend
