@@ -20,7 +20,9 @@ let close_communication { fd; _ } = Lwt_unix.close fd
 let open_communication ?switch ~mode port_name =
   Serialport.Utils.assert_port_exist port_name;
 
-  let* fd = Lwt_unix.openfile port_name [ O_RDWR; O_NONBLOCK ] 0o000 in
+  let* fd =
+    Lwt_unix.openfile port_name [ O_RDWR; O_NOCTTY; O_NONBLOCK ] 0o000
+  in
   Platform_depend.setup_serial_port_generic (Lwt_unix.unix_file_descr fd) mode;
 
   let serial_port = make fd in
