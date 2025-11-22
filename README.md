@@ -2,22 +2,31 @@
 
 # serialport
 
-A cross-platform serial port communication library for modern OCaml that supports POSIX and Windows systems, as well as different I/O libraries (i.e., Lwt/Async/Eio for concurrency or a simple Unix interface).
+A cross-platform library for serial port communication in OCaml that supports both POSIX and Windows operating systems, and also provides a synchronous and asynchronous interface for various input/output (I/O) libraries such as Lwt, Async, and Eio.
 
 [Documentation]()
 
-
-> [!WARNING]
->
-> The development stage of the project is not yet suitable for use.
-
-The main motivation for creating this project was to address the lack of a comprehensive library for managing serial (COM) port communication in various environments, as well as the absence of an intuitive API for this task. The exist [OSerial] library has significant limitations in terms of functionality and future development, making it unsuitable for use in today's advanced environments.
+The main motivation behind creating this project is to address the lack of a comprehensive library for managing serial port communication in different environments, as well as the lack of an intuitive API for this task. The existing [OSerial] library has significant limitations in terms of functionality and future development, making it unsuitable for use in modern environments.
 
 ## Installation
 
-Now you can get only upstream (developer branch) version using OPAM, building from sources:
+Now you can get (aka pin) only upstream (developer branch) version using OPAM, building from sources:
 ```console
-$ opam install serialport.dev https://github.com/dx3mod/serialport.git
+$ opam pin serialport.dev https://github.com/dx3mod/serialport.git
+```
+
+## Quick start
+
+```ocaml
+# #require "serialport.unix";;
+
+# let mode = Mode.make ~baud_rate:11500 ()
+  and device_path = "/dev/ttyS3" in
+  Serialport_unix.with_open_communication ~mode device_path @@ fun ser_port_conn -> 
+  (* get abstractions for I/O *)
+  let (ic, oc) = Serialport_unix.to_channels ser_port_conn in
+  (* working *)
+  Out_channel.output_string oc "Hello from PC!"
 ```
 
 ## References
