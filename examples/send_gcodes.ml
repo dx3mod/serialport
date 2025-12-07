@@ -18,7 +18,7 @@ let demo connection =
   let* _ = Lwt_list.iter_s (send_command connection) commands in
   Lwt_io.printl "Commands sent."
 
-let port = Obj.magic "/dev/ttyVA00"
+let port = "/dev/ttyUSB0"
 and baud_rate = 115200
 
 let () =

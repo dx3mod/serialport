@@ -1,0 +1,6 @@
+(library
+ (name serialport_miou)
+ (public_name serialport.miou)
+ (optional)
+ (enabled_if %{lib-available:miou})
+ (libraries serialport miou.unix))

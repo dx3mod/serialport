@@ -1,3 +1,14 @@
 (executables
  (names send_gcodes)
+ (modules send_gcodes)
  (libraries serialport.lwt lwt.unix))
+
+(executables
+ (names hello_miou)
+ (modules hello_miou)
+ (libraries serialport.miou))
+
+(executables
+ (names hello_unix)
+ (modules hello_unix)
+ (libraries serialport.unix))
