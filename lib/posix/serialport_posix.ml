@@ -25,9 +25,9 @@ let setup_serial_port_generic fd mode =
       {
         attr with
         c_ibaud = mode.baud_rate;
+        c_obaud = mode.baud_rate;
         c_echo = false;
         c_icanon = false;
-        c_obaud = mode.baud_rate;
         c_opost = false;
         c_csize = mode.data_bits;
       }

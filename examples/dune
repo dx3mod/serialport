@@ -4,11 +4,11 @@
  (libraries serialport.lwt lwt.unix))
 
 (executables
- (names hello_miou)
- (modules hello_miou)
+ (names read_hello_miou)
+ (modules read_hello_miou)
  (libraries serialport.miou))
 
 (executables
- (names hello_unix)
- (modules hello_unix)
+ (names read_hello_unix)
+ (modules read_hello_unix)
  (libraries serialport.unix))
