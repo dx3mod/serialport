@@ -2,7 +2,7 @@
 
 # serialport
 
-A cross-platform library for serial port communication in OCaml, which supports both POSIX and Windows systems. It provides a synchronous and asynchronous interface using various input/output (I/O) libraries, such as Lwt, Async, and Eio.
+A cross-platform library for serial port communication in OCaml, which supports both POSIX and Windows systems. It provides a synchronous and asynchronous interface using various I/O libraries, such as Lwt, Miou.
 
 [API references]()
 
@@ -15,28 +15,36 @@ Now you can get (aka pin) only upstream (developer branch) version using OPAM, b
 $ opam pin serialport.dev https://github.com/dx3mod/serialport.git
 ```
 
-## Quick start
+## Usage
+
+Typically, an example of usage is communication between a PC and an Arduino board or other devices via an old-school serial port.
 
 ```ocaml
 # #require "serialport.unix";;
 
-# let mode = Serialport.Mode.make ~baud_rate:11500 ()
-  and device_path = "/dev/ttyS3" in
-  Serialport_unix.with_open_communication ~mode device_path @@ fun ser_port_conn -> 
-  (* get abstractions for I/O *)
-  let (ic, oc) = Serialport_unix.to_channels ser_port_conn in
-  (* working *)
-  Out_channel.output_string oc "Hello from PC!"
+# let mode = Serialport.Mode.make ~baud_rate:9600 ()
+  and port_name = "/dev/ttyUSB0" in
+
+  Serialport_unix.with_open_communication ~mode port_name begin fun ser_port_conn -> 
+      (* Get channels abstractions for high-level working with I/O without buffering. *)
+      let (ic, oc) = Serialport_unix.to_channels ~buffered:false ser_port_conn in
+      (* Wait until Arduino has been initialized. *)
+      Unix.sleep 3; 
+      (* Send the message to the Arduino via the serial port. *)
+      Out_channel.output_string oc "Hello from PC!\n";
+      (* Read the response from the serial port. *)
+      In_channel.input_line ic
+    end
 ```
 
 ## References
 
 For research this topic you should read [Serial Programming Guide for POSIX Operating Systems](https://www.msweet.org/serial/serial.html) for Unix systems and [Windows Serial Port Programming](https://ds.opdenbrouw.nl/micprg/pdf/serial-win.pdf) for Windows platform.
 
-Other implementations: 
-outdated OCaml Serial Module [m-laniakea/oserial](https://github.com/m-laniakea/oserial),
-Rust [serialport](https://docs.rs/serialport/latest/serialport/),
-Golang [bugst/go-serial](https://github.com/bugst/go-serial).
+Other implementations
+* outdated OCaml Serial Module [m-laniakea/oserial](https://github.com/m-laniakea/oserial),
+* Rust [serialport](https://docs.rs/serialport/latest/serialport/),
+* Golang [bugst/go-serial](https://github.com/bugst/go-serial).
 
 ## License
 

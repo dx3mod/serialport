@@ -26,7 +26,9 @@ let with_open_communication ~mode port f =
     (fun () -> f serial_port)
     ~finally:(fun () -> close_communication serial_port)
 
-let to_channels { oc; ic; _ } = (ic, oc)
+let to_channels ?(buffered = true) { oc; ic; _ } =
+  Out_channel.set_buffered oc buffered;
+  (ic, oc)
 
 let pp fmt { port_location; _ } =
   Format.fprintf fmt "SerialPort(%s)" port_location

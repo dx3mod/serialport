@@ -21,7 +21,7 @@ val close_communication : t -> unit
 
 (** {1 I/O} *)
 
-val to_channels : t -> in_channel * out_channel
+val to_channels : ?buffered:bool -> t -> in_channel * out_channel
 (** [to_channels serial_port]
 
     @return Channel abstraction pair for input/output tasks. *)
