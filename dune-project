@@ -2,14 +2,16 @@
 
 (name serialport)
 
+(version 0.1)
+
 (generate_opam_files true)
 
 (source
  (github dx3mod/serialport))
 
-(authors "Author Name <author@example.com>")
+(authors "Mikhail Lopatin <dx3mod@bk.ru>")
 
-(maintainers "Maintainer Name <maintainer@example.com>")
+(maintainers "Mikhail Lopatin <dx3mod@bk.ru>")
 
 (license MIT)
 
@@ -17,7 +19,8 @@
  (name serialport)
  (synopsis "Serial communication library")
  (description "A cross-platform serial port library for OCaml")
- (depends ocaml)
+ (depends
+  (ocaml
+   (>= 4.14)))
  (tags
-  (serial comport com)))
-
+  (serial comport com unix)))

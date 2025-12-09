@@ -2,7 +2,7 @@
 
 # serialport
 
-A cross-platform library for serial port communication in OCaml, which supports both POSIX and Windows systems. It provides a synchronous and asynchronous interface using various I/O libraries, such as Lwt, Miou.
+A cross-platform library for serial port communication in OCaml, which supports both POSIX and ~~Windows systems~~. It provides a synchronous and asynchronous interface using various I/O libraries, such as Lwt, Miou.
 
 [API references]()
 
@@ -10,10 +10,17 @@ The main motivation behind creating this project is to address the lack of a com
 
 ## Installation
 
-Now you can get (aka pin) only upstream (developer branch) version using OPAM, building from sources:
+Installation from the OPAM repository using the OPAM package manager.
+```console
+$ opam install serialport
+```
+
+You can also get the latest version of the upstream (developer) branch using OPAM.
 ```console
 $ opam pin serialport.dev https://github.com/dx3mod/serialport.git
 ```
+
+If you are using Dune, please add the `serialport` library to your dependencies.
 
 ## Usage
 
