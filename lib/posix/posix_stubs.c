@@ -1,4 +1,5 @@
 #include <sys/ioctl.h>
+#include <termios.h>
 
 #include <caml/mlvalues.h>
 #include <caml/fail.h>
@@ -15,5 +16,11 @@ CAMLprim
     else
         ioctl(Int_val(unix_fd), TIOCMBIC, &status);
 
+    return Val_unit;
+}
+
+CAMLprim value caml_serial_port_flush(value unix_fd)
+{
+    tcflush(Int_val(unix_fd), TCIOFLUSH);
     return Val_unit;
 }

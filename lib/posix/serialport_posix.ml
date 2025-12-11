@@ -28,6 +28,7 @@ let initialize_serial_port_by_port_opts fd port_options =
         c_obaud = options.baud_rate;
         c_echo = false;
         c_icanon = false;
+        c_isig = false;
         c_opost = false;
         c_csize = options.data_bits;
       }
@@ -39,5 +40,7 @@ let initialize_serial_port_by_port_opts fd port_options =
 
 type serial_lines = Request_to_send | Data_terminal_ready
 
-external set_pin : t -> serial_lines -> bool -> unit
+external set_serial_port_pin : t -> serial_lines -> bool -> unit
   = "caml_set_serial_port_pin"
+
+external flush_serial_port : t -> unit = "caml_serial_port_flush"

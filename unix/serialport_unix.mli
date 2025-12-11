@@ -33,7 +33,6 @@ module Modem : sig
   val write_data_terminal_ready : t -> bool -> unit
 end
 
-
 (** {1 Exceptions} *)
 
 exception Not_found_port of string
