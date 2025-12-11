@@ -1,5 +1,5 @@
 type t = {
-  unix_fd : Serialport.Platform_depend.serial_port;
+  unix_fd : Serialport.Native.t;
   ic : in_channel;
   oc : out_channel;
   port_location : string;
@@ -19,7 +19,7 @@ let open_communication ~opts:port_opts port_name =
   if not (Sys.file_exists port_name) then raise (Not_found_port port_name);
 
   let fd = Unix.openfile port_name [ O_RDWR; O_NOCTTY; O_NONBLOCK ] 0o000 in
-  Serialport.Platform_depend.setup_serial_port_generic fd port_opts;
+  Serialport.Native.initialize_serial_port_by_port_opts fd port_opts;
   make ~port_location:port_name fd
 
 let with_open_communication ~opts port f =

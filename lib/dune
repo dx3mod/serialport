@@ -3,6 +3,6 @@
  (libraries
   port_options
   (select
-   platform_depend_intf.ml
+   native_intf.ml
    from
-   (serialport_posix -> platform_depend_intf.posix.ml))))
+   (serialport_posix -> native_intf.posix.ml))))

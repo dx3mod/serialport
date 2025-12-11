@@ -12,4 +12,4 @@ module Modem = Modem
 
     The native implementation for target system. *)
 
-module Platform_depend = Platform_depend
+module Native = Native

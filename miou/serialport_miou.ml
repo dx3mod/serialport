@@ -6,7 +6,7 @@ let open_communication ~opts:port_opts port_name =
   if not (Sys.file_exists port_name) then raise (Not_found_port port_name);
 
   let fd = Unix.openfile port_name [ O_RDWR; O_NOCTTY; O_NONBLOCK ] 0o000 in
-  Serialport.Platform_depend.setup_serial_port_generic fd port_opts;
+  Serialport.Native.initialize_serial_port_by_port_opts fd port_opts;
 
   Miou_unix.Ownership.of_file_descr fd
 

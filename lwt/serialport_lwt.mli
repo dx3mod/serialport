@@ -28,8 +28,3 @@ val to_channels : t -> Lwt_io.input_channel * Lwt_io.output_channel
 (** {1 Exceptions} *)
 
 exception Not_found_port of string
-
-(** {1 Aliases} *)
-
-module Port_options = Serialport.Port_options
-module Platform_depend = Serialport.Platform_depend

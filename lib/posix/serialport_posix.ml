@@ -1,12 +1,12 @@
-type serial_port = Unix.file_descr
-and serial_port_name = string
-and serial_port_options = Unix.terminal_io -> Unix.terminal_io
+type t = Unix.file_descr
+and port_name = string
+and port_options = Unix.terminal_io -> Unix.terminal_io
 
-let setup_serial_port fd opts =
+let initialize_serial_port fd opts =
   let attr = Unix.tcgetattr fd in
   Unix.tcsetattr fd Unix.TCSANOW (opts attr)
 
-let setup_serial_port_generic fd port_options =
+let initialize_serial_port_by_port_opts fd port_options =
   let attr_of_parity parity attr =
     match parity with
     | Port_options.No_parity ->
@@ -35,4 +35,4 @@ let setup_serial_port_generic fd port_options =
     |> attr_of_stop_bits options.stop_bits
   in
 
-  setup_serial_port fd @@ attr_of_port_opts port_options
+  initialize_serial_port fd @@ attr_of_port_opts port_options
