@@ -11,7 +11,6 @@ let () =
 
       for i = 0 to 1_000 do
         Printf.fprintf oc "%d: Hello from PC\n" i;
-        Unix.sleepf 0.2;
 
         In_channel.input_line ic |> Option.iter print_endline
       done

@@ -18,12 +18,11 @@ exception Not_found_port of string
 let open_communication ?(exclusive = true) ~opts:port_opts port_name =
   if not (Sys.file_exists port_name) then raise (Not_found_port port_name);
 
-  let fd = Unix.openfile port_name [ O_RDWR; O_NOCTTY; O_NONBLOCK ] 0o000 in
+  let fd = Unix.openfile port_name [ O_RDWR; O_NOCTTY ] 0o000 in
 
   Serialport.Native.flush_serial_port fd;
   Serialport.Native.initialize_serial_port_by_port_opts fd port_opts;
 
-  Serialport.Native.set_serial_port_exclusive fd (not exclusive);
   Serialport.Native.set_serial_port_exclusive fd exclusive;
 
   make ~port_location:port_name fd
