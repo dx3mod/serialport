@@ -25,6 +25,6 @@ let () =
   Lwt_main.run
     begin
       Lwt_switch.with_switch @@ fun switch ->
-      let mode = Mode.make ~baud_rate () in
-      Serialport_lwt.open_communication ~switch ~mode port >>= demo
+      let opts = Port_options.make ~baud_rate () in
+      Serialport_lwt.open_communication ~switch ~opts port >>= demo
     end

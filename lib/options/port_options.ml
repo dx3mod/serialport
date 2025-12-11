@@ -1,4 +1,4 @@
-(** [Mode] module describes a
+(** [Port_options] module describes a
     {{!Serialport.Platform_depend.S.serial_port}serial port} configuration. *)
 
 type t = {

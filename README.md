@@ -29,10 +29,10 @@ Typically, an example of usage is communication between a PC and an Arduino boar
 ```ocaml
 # #require "serialport.unix";;
 
-# let mode = Serialport.Mode.make ~baud_rate:9600 ()
+# let port_opts = Serialport.Port_options.make ~baud_rate:9600 ()
   and port_name = "/dev/ttyUSB0" in
 
-  Serialport_unix.with_open_communication ~mode port_name begin fun ser_port_conn -> 
+  Serialport_unix.with_open_communication ~opts:port_ports port_name begin fun ser_port_conn -> 
       (* Get channels abstractions for high-level working with I/O without buffering. *)
       let (ic, oc) = Serialport_unix.to_channels ~buffered:false ser_port_conn in
       (* Wait until Arduino has been initialized. *)

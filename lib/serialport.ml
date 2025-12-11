@@ -1,8 +1,8 @@
 (** {1 Configuration} *)
 
-module Mode = Mode
-(** [Mode] module describes a {{!Platform_depend.S.serial_port}serial port}
-    configuration. *)
+module Port_options = Port_options
+(** [Port_options] module describes a
+    {{!Platform_depend.S.serial_port}serial port} configuration. *)
 
 (** {1 Errors} *)
 

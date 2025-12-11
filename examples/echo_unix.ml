@@ -2,9 +2,9 @@ let port_name = "/dev/ttyUSB0"
 and baud_rate = 9600
 
 let () =
-  let mode = Mode.make ~baud_rate () in
+  let opts = Port_options.make ~baud_rate () in
 
-  Serialport_unix.with_open_communication ~mode port_name begin fun ser_port ->
+  Serialport_unix.with_open_communication ~opts port_name begin fun ser_port ->
       let ic, oc = Serialport_unix.to_channels ~buffered:false ser_port in
 
       Unix.sleepf 2.;

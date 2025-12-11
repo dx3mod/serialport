@@ -5,10 +5,10 @@ type t
 (** Interface for a opened {{!Platform_depend.S.serial_port}serial port}. *)
 
 val open_communication :
-  ?switch:Lwt_switch.t -> mode:Serialport.Mode.t -> string -> t Lwt.t
-(** [open_communication ?switch ~mode port_name] open opens the
+  ?switch:Lwt_switch.t -> opts:Serialport.Port_options.t -> string -> t Lwt.t
+(** [open_communication ?switch ~opts port_name] open opens the
     {{!Platform_depend.S.serial_port}serial port} using the specified
-    {{!Mode}[mode]s} configuration.
+    {{!Port_opts}[opts]s} configuration.
 
     @param switch
       Pins the serial port to the switch's scope to automatically
@@ -27,5 +27,5 @@ val to_channels : t -> Lwt_io.input_channel * Lwt_io.output_channel
 
 (** {1 Aliases} *)
 
-module Mode = Serialport.Mode
+module Port_options = Serialport.Port_options
 module Platform_depend = Serialport.Platform_depend

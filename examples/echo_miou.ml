@@ -3,10 +3,10 @@ and baud_rate = 9600
 
 let () =
   Miou_unix.run @@ fun () ->
-  let mode = Mode.make ~baud_rate () in
+  let opts = Port_options.make ~baud_rate () in
   let stdout = Miou_unix.of_file_descr Unix.stdout in
 
-  Serialport_miou.with_open_communication ~mode port_name begin fun ser_port ->
+  Serialport_miou.with_open_communication ~opts port_name begin fun ser_port ->
       Miou_unix.sleep 0.5;
 
       let buf = Bytes.create 100 in

@@ -1,6 +1,6 @@
 open Lwt.Syntax
 module Platform_depend = Serialport.Platform_depend
-module Mode = Serialport.Mode
+module Port_options = Serialport.Port_options
 
 type t = {
   fd : Lwt_unix.file_descr;
@@ -17,13 +17,15 @@ let make fd =
 
 let close_communication { fd; _ } = Lwt_unix.close fd
 
-let open_communication ?switch ~mode port_name =
+let open_communication ?switch ~opts:port_opts port_name =
   Serialport.Utils.assert_port_exist port_name;
 
   let* fd =
     Lwt_unix.openfile port_name [ O_RDWR; O_NOCTTY; O_NONBLOCK ] 0o000
   in
-  Platform_depend.setup_serial_port_generic (Lwt_unix.unix_file_descr fd) mode;
+  Platform_depend.setup_serial_port_generic
+    (Lwt_unix.unix_file_descr fd)
+    port_opts;
 
   let serial_port = make fd in
   Lwt_switch.add_hook switch (fun () -> close_communication serial_port);

@@ -1,17 +1,17 @@
 (** The module provides a simple synchronization interface for non-concurrent
     programs, as well as a {{!Platform_depend.S}low-level native abstraction}
-    for setting up serial ports and {{!Mode}configuring} them. *)
+    for setting up serial ports and {{!Port_options}configuring} them. *)
 
 type t
 (** Interface for a opened {{!Platform_depend.S.serial_port}serial port}. *)
 
-val open_communication : mode:Mode.t -> string -> t
-(** [open_communication ~mode port_name] open opens the
+val open_communication : opts:Port_options.t -> string -> t
+(** [open_communication ~opts port_name] open opens the
     {{!Platform_depend.S.serial_port}serial port} using the specified
-    {{!Mode}[mode]s} configuration. *)
+    {{!Port_options}[port options]} configuration. *)
 
-val with_open_communication : mode:Mode.t -> string -> (t -> 'a) -> 'a
-(** [with_open_communication ~mode port_name callback] similar to
+val with_open_communication : opts:Port_options.t -> string -> (t -> 'a) -> 'a
+(** [with_open_communication ~opts port_name callback] similar to
     {!open_communication} but with an auto-{{!close_communication}closing}
     mechanism. *)
 
