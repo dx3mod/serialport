@@ -44,3 +44,6 @@ external set_serial_port_pin : t -> serial_lines -> bool -> unit
   = "caml_set_serial_port_pin"
 
 external flush_serial_port : t -> unit = "caml_serial_port_flush"
+
+external set_serial_port_exclusive : t -> bool -> unit
+  = "caml_set_serial_port_exclusive"

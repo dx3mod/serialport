@@ -24,3 +24,16 @@ CAMLprim value caml_serial_port_flush(value unix_fd)
     tcflush(Int_val(unix_fd), TCIOFLUSH);
     return Val_unit;
 }
+
+CAMLprim value caml_set_serial_port_exclusive(value unix_fd, value enable)
+{
+    if (Bool_val(enable))
+    {
+        if (ioctl(Int_val(unix_fd), TIOCEXCL) < 0)
+            caml_failwith("failed to set exclusive on serial port");
+    }
+    else if (ioctl(Int_val(unix_fd), TIOCNXCL) < 0)
+        caml_failwith("failed to unset exclusive on serial port");
+
+    return Val_unit;
+}

@@ -5,12 +5,13 @@
 type t
 (** Interface for a opened {{!Platform_depend.S.serial_port}serial port}. *)
 
-val open_communication : opts:Port_options.t -> string -> t
+val open_communication : ?exclusive:bool -> opts:Port_options.t -> string -> t
 (** [open_communication ~opts port_name] open opens the
     {{!Platform_depend.S.serial_port}serial port} using the specified
-    {{!Port_options}[port options]} configuration. *)
+    {{!Port_options}[opts]} configuration. *)
 
-val with_open_communication : opts:Port_options.t -> string -> (t -> 'a) -> 'a
+val with_open_communication :
+  ?exclusive:bool -> opts:Port_options.t -> string -> (t -> 'a) -> 'a
 (** [with_open_communication ~opts port_name callback] similar to
     {!open_communication} but with an auto-{{!close_communication}closing}
     mechanism. *)
@@ -32,6 +33,10 @@ module Modem : sig
   val set_request_to_send : t -> bool -> unit
   val set_data_terminal_ready : t -> bool -> unit
 end
+
+(** {1 Exclusive} *)
+
+val set_exclusive : t -> bool -> unit
 
 (** {1 Exceptions} *)
 

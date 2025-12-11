@@ -15,7 +15,7 @@ let close_communication { unix_fd; _ } = Unix.close unix_fd
 
 exception Not_found_port of string
 
-let open_communication ~opts:port_opts port_name =
+let open_communication ?(exclusive = true) ~opts:port_opts port_name =
   if not (Sys.file_exists port_name) then raise (Not_found_port port_name);
 
   let fd = Unix.openfile port_name [ O_RDWR; O_NOCTTY; O_NONBLOCK ] 0o000 in
@@ -23,10 +23,13 @@ let open_communication ~opts:port_opts port_name =
   Serialport.Native.flush_serial_port fd;
   Serialport.Native.initialize_serial_port_by_port_opts fd port_opts;
 
+  Serialport.Native.set_serial_port_exclusive fd (not exclusive);
+  Serialport.Native.set_serial_port_exclusive fd exclusive;
+
   make ~port_location:port_name fd
 
-let with_open_communication ~opts port f =
-  let serial_port = open_communication ~opts port in
+let with_open_communication ?(exclusive = true) ~opts port f =
+  let serial_port = open_communication ~exclusive ~opts port in
   Fun.protect
     (fun () -> f serial_port)
     ~finally:(fun () -> close_communication serial_port)
@@ -45,3 +48,6 @@ module Modem = struct
   and set_data_terminal_ready { unix_fd; _ } level =
     Serialport.Modem.set_data_terminal_ready unix_fd level
 end
+
+let set_exclusive { unix_fd; _ } enable =
+  Serialport.Native.set_serial_port_exclusive unix_fd enable
