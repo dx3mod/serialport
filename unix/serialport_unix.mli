@@ -26,6 +26,10 @@ val to_channels : ?buffered:bool -> t -> in_channel * out_channel
 
     @return Channel abstraction pair for input/output tasks. *)
 
+(** {1 Exceptions} *)
+
+exception Not_found_port of string
+
 (** {1 Pretty print} *)
 
 val pp : Format.formatter -> t -> unit

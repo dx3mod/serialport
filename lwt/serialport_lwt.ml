@@ -17,8 +17,13 @@ let make fd =
 
 let close_communication { fd; _ } = Lwt_unix.close fd
 
+exception Not_found_port of string
+
 let open_communication ?switch ~opts:port_opts port_name =
-  Serialport.Utils.assert_port_exist port_name;
+  let* _ =
+    if not (Sys.file_exists port_name) then Lwt.fail (Not_found_port port_name)
+    else Lwt.return_unit
+  in
 
   let* fd =
     Lwt_unix.openfile port_name [ O_RDWR; O_NOCTTY; O_NONBLOCK ] 0o000

@@ -25,6 +25,10 @@ val to_channels : t -> Lwt_io.input_channel * Lwt_io.output_channel
 
     @return Lwt channel abstraction pair for input/output tasks. *)
 
+(** {1 Exceptions} *)
+
+exception Not_found_port of string
+
 (** {1 Aliases} *)
 
 module Port_options = Serialport.Port_options

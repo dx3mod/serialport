@@ -1,19 +1,15 @@
-(** {1 Configuration} *)
+(** {1 Control options} *)
 
 module Port_options = Port_options
 (** [Port_options] module describes a
     {{!Platform_depend.S.serial_port}serial port} configuration. *)
 
-(** {1 Errors} *)
+(** {2 Modem} *)
 
-include Errors
+module Modem = Modem
 
 (** {1 Low level}
 
     The native implementation for target system. *)
 
 module Platform_depend = Platform_depend
-
-(** {1 Utils} *)
-
-module Utils = Utils
