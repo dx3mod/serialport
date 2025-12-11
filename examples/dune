@@ -9,6 +9,6 @@
  (libraries serialport.miou))
 
 (executables
- (names read_hello_unix echo_unix)
- (modules read_hello_unix echo_unix)
+ (names read_hello_unix echo_unix reset_unix)
+ (modules read_hello_unix echo_unix reset_unix)
  (libraries serialport.unix))

@@ -36,3 +36,8 @@ let initialize_serial_port_by_port_opts fd port_options =
   in
 
   initialize_serial_port fd @@ attr_of_port_opts port_options
+
+type serial_lines = Request_to_send | Data_terminal_ready
+
+external set_pin : t -> serial_lines -> bool -> unit
+  = "caml_set_serial_port_pin"

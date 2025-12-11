@@ -3,4 +3,7 @@
  (package serialport)
  (enabled_if
   (= %{os_type} "Unix"))
- (libraries unix port_options))
+ (libraries unix port_options)
+ (foreign_stubs
+  (language c)
+  (names posix_stubs)))
