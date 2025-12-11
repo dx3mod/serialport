@@ -40,7 +40,7 @@ let initialize_serial_port_by_port_opts fd port_options =
 
 type serial_lines = Request_to_send | Data_terminal_ready
 
-external set_serial_port_pin : t -> serial_lines -> bool -> unit
+external set_serial_modem_bits : t -> serial_lines -> bool -> unit
   = "caml_set_serial_port_pin"
 
 external flush_serial_port : t -> unit = "caml_serial_port_flush"
