@@ -39,9 +39,9 @@ let pp fmt { port_location; _ } =
   Format.fprintf fmt "SerialPort(%s)" port_location
 
 module Modem = struct
-  let write_request_to_send { unix_fd; _ } level =
-    Serialport.Modem.write_request_to_send unix_fd level
+  let set_request_to_send { unix_fd; _ } level =
+    Serialport.Modem.set_request_to_send unix_fd level
 
-  and write_data_terminal_ready { unix_fd; _ } level =
-    Serialport.Modem.write_data_terminal_ready unix_fd level
+  and set_data_terminal_ready { unix_fd; _ } level =
+    Serialport.Modem.set_data_terminal_ready unix_fd level
 end
