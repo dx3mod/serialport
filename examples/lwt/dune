@@ -1,0 +1,5 @@
+(executables
+ (names lwt_hello)
+ (libraries serialport.lwt)
+ (preprocess
+  (pps lwt_ppx)))
