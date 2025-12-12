@@ -22,5 +22,6 @@
  (depends
   (ocaml
    (>= 4.14)))
+ (depopts lwt)
  (tags
   (serial comport com unix)))
