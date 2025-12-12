@@ -23,15 +23,32 @@ val with_open_communication :
     @raise Unix.Unix_error *)
 
 val close_communication : t -> unit
-(** [close serial_port] close the {{!Platform_depend.S.serial_port}serial port}.
-*)
+(** [close ser_port] close the {{!Platform_depend.S.serial_port}serial port}. *)
 
 (** {1 I/O} *)
 
+(** {2 Channels} *)
+
 val to_channels : ?buffered:bool -> t -> in_channel * out_channel
-(** [to_channels serial_port]
+(** [to_channels ?buffered ser_port]
+
+    @param buffered Enable output buffering (by default is disable).
 
     @return Channel abstraction pair for input/output tasks. *)
+
+(** {2 Unix interface} *)
+
+val write : t -> bytes -> int -> int -> int
+(** [write ser_port buf off len] the [buf] bytes to serial port.
+
+    Alias for {!Unix.write}. *)
+
+val read : t -> bytes -> int -> int -> int
+(** [read ser_port buf off len] the serial port to [buf] bytes.
+
+    Alias for {!Unix.read}. *)
+
+val unsafe_unix_fd : t -> Unix.file_descr
 
 (** {2 Modem} *)
 

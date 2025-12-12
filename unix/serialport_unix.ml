@@ -33,9 +33,14 @@ let with_open_communication ?(exclusive = true) ~opts port f =
     (fun () -> f serial_port)
     ~finally:(fun () -> close_communication serial_port)
 
-let to_channels ?(buffered = true) { oc; ic; _ } =
+let to_channels ?(buffered = false) { oc; ic; _ } =
   Out_channel.set_buffered oc buffered;
   (ic, oc)
+
+let[@inline] write { unix_fd; _ } buf off len = Unix.write unix_fd buf off len
+and[@inline] read { unix_fd; _ } buf off len = Unix.read unix_fd buf off len
+
+let unsafe_unix_fd { unix_fd; _ } = unix_fd
 
 let pp fmt { port_location; _ } =
   Format.fprintf fmt "SerialPort(%s)" port_location
