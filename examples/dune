@@ -1,14 +1,3 @@
-; (executables
-;  (names send_gcodes)
-;  (modules send_gcodes)
-;  (libraries serialport.lwt lwt.unix))
-
-; (executables
-;  (names read_hello_miou echo_miou)
-;  (modules read_hello_miou echo_miou)
-;  (libraries serialport.miou))
-
 (executables
- (names read_hello_unix echo_unix reset_unix)
- (modules read_hello_unix echo_unix reset_unix)
+ (names unix_hello unix_reset)
  (libraries serialport.unix))
