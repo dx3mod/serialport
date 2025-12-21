@@ -3,8 +3,10 @@
 
 (** {1 Control options} *)
 
-module Port_options = Port_options
 (** The module describes the configuration options for a serial port. *)
+module Port_options = struct
+  include Port_options
+end
 
 (** {2 Modem} *)
 

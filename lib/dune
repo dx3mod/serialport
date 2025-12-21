@@ -1,7 +1,7 @@
 (library
  (public_name serialport)
  (libraries
-  port_options
+  (re_export port_options)
   (select
    native_intf.ml
    from
