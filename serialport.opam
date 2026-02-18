@@ -31,4 +31,3 @@ build: [
 ]
 dev-repo: "git+https://github.com/dx3mod/serialport.git"
 x-maintenance-intent: ["(latest)"]
-available: [os != "win32" & os != "cygwin"]
