@@ -2,8 +2,6 @@
 
 (name serialport)
 
-(version 0.2)
-
 (generate_opam_files true)
 
 (source
