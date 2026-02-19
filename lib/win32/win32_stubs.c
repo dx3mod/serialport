@@ -35,7 +35,7 @@ CAMLprim value caml_win32_set_com_port_dcb(value com_port, value baudrate,
   dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
 
   if (GetCommState(h_com_port, &dcbSerialParams) == FALSE)
-    caml_failwith("fail get COM port DCB params");
+    caml_failwith("failed to get COM port state to DCB params");
 
   dcbSerialParams.BaudRate = Int_val(baudrate);
   dcbSerialParams.ByteSize = Int_val(databits);
@@ -43,7 +43,7 @@ CAMLprim value caml_win32_set_com_port_dcb(value com_port, value baudrate,
   dcbSerialParams.Parity = Int_val(parity);
 
   if (SetCommState(h_com_port, &dcbSerialParams) == FALSE)
-    caml_failwith("fail set COM port DCB params");
+    caml_failwith("failed to set COM port state by DCB params");
 
   CAMLreturn(Val_unit);
 }
@@ -65,6 +65,9 @@ CAMLprim value caml_set_serial_port_pin(value com_port, value serial_lines,
   DCB dcbSerialParams = {0};
   dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
 
+  if (GetCommState(h_com_port, &dcbSerialParams) == FALSE)
+    caml_failwith("failed to get COM port state to DCB params");
+
   if (Int_val(serial_lines) == 0) {
     dcbSerialParams.fRtsControl = Bool_val(enable);
   } else {
@@ -72,7 +75,7 @@ CAMLprim value caml_set_serial_port_pin(value com_port, value serial_lines,
   }
 
   if (SetCommState(h_com_port, &dcbSerialParams) == FALSE)
-    caml_failwith("fail set pin COM port DCB params");
+    caml_failwith("failed to set COM port state by DCB params");
 
   CAMLreturn(Val_unit);
 }
