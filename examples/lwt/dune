@@ -1,5 +1,7 @@
 (executables
  (names lwt_hello)
  (libraries serialport.lwt)
+ (enabled_if
+  (= %{lib:lwt_ppx} true))
  (preprocess
   (pps lwt_ppx)))

@@ -2,11 +2,17 @@
 
 # serialport
 
-A cross-platform library for serial port communication in OCaml, which supports both POSIX and ~~Windows systems~~. It provides a synchronous and asynchronous interface using various I/O libraries.
+A cross-platform library for serial port communication in OCaml, which supports
+both POSIX and Windows systems. It provides a synchronous and asynchronous interface
+using various I/O libraries.
 
 [API references]()
 
-The main motivation behind creating this project is to address the lack of a comprehensive library for managing serial port communication in different environments, as well as the lack of an intuitive API for this task. The existing [OSerial] library has significant limitations in terms of functionality and future development, making it unsuitable for use in modern environments.
+The main motivation behind creating this project is to address the lack of
+a comprehensive library for managing serial port communication in different environments,
+ as well as the lack of an intuitive API for this task. The existing [OSerial] library
+has significant limitations in terms of functionality and future development,
+making it unsuitable for use in modern environments.
 
 ## Installation
 
@@ -24,7 +30,8 @@ If you are using Dune, please add the `serialport` library to your dependencies.
 
 ## Usage
 
-Typically, an example of usage is communication between a PC and an Arduino board or other devices via an old-school serial port.
+Typically, an example of usage is communication between a PC and an Arduino board
+or other devices via an old-school serial port.
 
 ```ocaml
 # #require "serialport.unix";;
@@ -47,7 +54,8 @@ Typically, an example of usage is communication between a PC and an Arduino boar
 
 ## References
 
-For research this topic you should read [Serial Programming Guide for POSIX Operating Systems](https://www.msweet.org/serial/serial.html) for Unix systems and [Windows Serial Port Programming](https://ds.opdenbrouw.nl/micprg/pdf/serial-win.pdf) for Windows platform.
+For research this topic you should read [Serial Programming Guide for POSIX Operating Systems](https://www.msweet.org/serial/serial.html)
+for Unix systems and [Windows Serial Port Programming](https://ds.opdenbrouw.nl/micprg/pdf/serial-win.pdf) for Windows platform.
 
 Other implementations
 * outdated OCaml Serial Module [m-laniakea/oserial](https://github.com/m-laniakea/oserial),
@@ -56,6 +64,7 @@ Other implementations
 
 ## License
 
-The project is licensed under [the MIT License](./LICENSE), which allows for all permissions. Just use it and enjoy yourself without fear. We are always open to pull requests!
+The project is licensed under [the MIT License](./LICENSE), which allows for all permissions.
+Just use it and enjoy yourself without fear. We are always open to pull requests!
 
 [OSerial]: https://github.com/m-laniakea/oserial
