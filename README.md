@@ -2,7 +2,7 @@
 
 # serialport
 
-A cross-platform serial communication library written in OCaml is designed to work with any I/O runtime.
+A cross-platform library for serial port communication in OCaml, designed to work with any I/O runtime.
 
 ## Installation
 
