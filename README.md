@@ -2,17 +2,7 @@
 
 # serialport
 
-A cross-platform library for serial port communication in OCaml, which supports
-both POSIX and Windows systems. It provides a synchronous and asynchronous interface
-using various I/O libraries.
-
-[API references]()
-
-The main motivation behind creating this project is to address the lack of
-a comprehensive library for managing serial port communication in different environments,
- as well as the lack of an intuitive API for this task. The existing [OSerial] library
-has significant limitations in terms of functionality and future development,
-making it unsuitable for use in modern environments.
+A cross-platform serial communication library written in OCaml is designed to work with any I/O runtime.
 
 ## Installation
 
