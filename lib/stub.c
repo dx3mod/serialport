@@ -49,9 +49,13 @@ value caml_open_serial_port(value port_name)
   fcntl(fd, F_SETFL, 0);
 
   unix_fd = Val_int(fd);
-
 #else // Windows
-#error "not implemented"
+  HANDLE port = CreateFile(full_port_name, (GENERIC_READ | GENERIC_WRITE), 0, NULL, OPEN_EXISTING, 0, NULL);
+
+  if (port == INVALID_HANDLE_VALUE)
+    caml_failwith("failed to open serial port by name: INVALID_HANDLE_VALUE");
+
+  unix_fd = Val_handle(port);
 #endif
 
   CAMLreturn(unix_fd);
@@ -62,7 +66,8 @@ CAMLprim value caml_flush_serial_port(value unix_fd)
 #if defined(__linux__) || defined(__APPLE__)
   tcflush(Int_val(unix_fd), TCIOFLUSH);
 #else // Windows
-#error "not implemented"
+  if (!PurgeComm(Handle_val(unix_fd), (PURGE_RXABORT | PURGE_RXCLEAR | PURGE_TXABORT | PURGE_TXCLEAR)))
+    caml_failwith("failed to flush serial port");
 #endif
   return Val_unit;
 }
@@ -72,7 +77,8 @@ CAMLprim value caml_drain_serial_port(value unix_fd)
 #if defined(__linux__) || defined(__APPLE__)
   tcdrain(Int_val(unix_fd));
 #else // Windows
-#error "not implemented"
+  if (!FlushFileBuffers(Handle_val(unix_fd)))
+    caml_failwith("failed to drain serial port");
 #endif
   return Val_unit;
 }
@@ -132,7 +138,37 @@ value caml_get_configuration_serial_port(value unix_fd)
     Store_field(config, 4, Val_int(flow_control));
   }
 #else // Windows
-#error "not implemented"
+  DCB options;
+
+  if (!GetCommState(Handle_val(unix_fd), &options))
+    caml_failwith("failed to get COM port options");
+
+  Store_field(config, 0, Val_int(options.BaudRate));
+
+  {
+    parity_t parity = NO_PARITY;
+
+    if (options.Parity == EVENPARITY)
+      parity = EVEN_PARITY;
+    else if (options.Parity == ODDPARITY)
+      parity = ODD_PARITY;
+
+    Store_field(config, 1, Val_int(parity));
+  }
+
+  Store_field(config, 2, Val_int(options.StopBits));
+  Store_field(config, 3, Val_int(options.ByteSize));
+
+  {
+    flow_control_t flow_control = NONE_FLOW_CONTROL;
+
+    if (options.fRtsControl == RTS_CONTROL_HANDSHAKE)
+      flow_control = HARDWARE_FLOW_CONTROL;
+    else if (options.fOutX && options.fInX)
+      flow_control = SOFTWARE_FLOW_CONTROL;
+
+    Store_field(config, 4, Val_int(flow_control));
+  }
 #endif
 
   CAMLreturn(config);
@@ -142,8 +178,6 @@ CAMLprim value caml_configure_serial_port(value unix_fd, value config)
 {
   CAMLparam2(unix_fd, config);
 
-  const int fd = Int_val(unix_fd);
-
   const int baud_rate = Int_val(Field(config, 0));
   const uint8_t data_bits = Int_val(Field(config, 1));
   const parity_t parity = Int_val(Field(config, 2));
@@ -151,6 +185,8 @@ CAMLprim value caml_configure_serial_port(value unix_fd, value config)
   const flow_control_t flow_control = Int_val(Field(config, 4));
 
 #if defined(__linux__) || defined(__APPLE__)
+  const int fd = Int_val(unix_fd);
+
   struct termios options;
 
   if (tcgetattr(fd, &options) < 0)
@@ -251,7 +287,81 @@ CAMLprim value caml_configure_serial_port(value unix_fd, value config)
     caml_failwith("failed to apply the configuration's options");
 
 #else // Windows
-#error "not implemented"
+  const HANDLE handle = Handle_val(unix_fd);
+
+  DCB options;
+
+  if (!GetCommState(handle, &options))
+    caml_failwith("failed to get COM port options");
+
+  ////////////////////////////////////////////////
+  // GENERAL SETUP
+
+  /* mandatory options */
+  options.fBinary = TRUE;
+  options.fDtrControl = FALSE;
+
+  ////////////////////////////////////////////////
+  // SETUP BAUD RATE SPEED
+
+  options.BaudRate = (DWORD)baud_rate;
+
+  ////////////////////////////////////////////////
+  // SETUP PARITY
+
+  switch (parity)
+  {
+  case NO_PARITY:
+    options.fParity = FALSE;
+    options.Parity = NOPARITY;
+    break;
+  case EVEN_PARITY:
+    options.fParity = TRUE;
+    options.Parity = EVENPARITY;
+    break;
+  case ODD_PARITY:
+    options.fParity = TRUE;
+    options.Parity = ODDPARITY;
+    break;
+  }
+
+  ////////////////////////////////////////////////
+  // SETUP STOP BITS
+
+  if (stop_bits == 2)
+    options.StopBits = TWOSTOPBITS;
+  else
+    options.StopBits = ONESTOPBIT;
+
+  ////////////////////////////////////////////////
+  // SETUP CHARACTER SIZE
+
+  options.ByteSize = data_bits;
+
+  ////////////////////////////////////////////////
+  // SETUP FLOW CONTROL
+
+  if (flow_control == HARDWARE_FLOW_CONTROL)
+    options.fRtsControl = RTS_CONTROL_HANDSHAKE;
+  else
+    options.fRtsControl = RTS_CONTROL_DISABLE;
+
+  if (flow_control == SOFTWARE_FLOW_CONTROL)
+  {
+    options.fOutX = TRUE;
+    options.fInX = TRUE;
+  }
+  else
+  {
+    options.fOutX = FALSE;
+    options.fInX = FALSE;
+  }
+
+  ////////////////////////////////////////////////
+  // APPLY THE OPTIONS
+
+  if (!SetCommState(handle, &options))
+    caml_failwith("failed to apply options to COM port";)
 #endif
 
   CAMLreturn(Val_unit);
@@ -272,20 +382,46 @@ CAMLprim value caml_get_serial_port_pin(value unix_fd, value pin)
   {
   case SERIAL_PORT_PIN_CTS:
     res = Val_bool((status & TIOCM_CTS) ? 1 : 0);
+    break;
   case SERIAL_PORT_PIN_DSR:
     res = Val_bool((status & TIOCM_DSR) ? 1 : 0);
+    break;
   case SERIAL_PORT_PIN_DCD:
     res = Val_bool((status & TIOCM_CAR) ? 1 : 0);
+    break;
   case SERIAL_PORT_PIN_RI:
     res = Val_bool((status & TIOCM_RI) ? 1 : 0);
+    break;
   case SERIAL_PORT_PIN_RTS:
     res = Val_bool((status & TIOCM_RTS) ? 1 : 0);
+    break;
   default:
     caml_invalid_argument("illegal serial port's pin for getting");
   }
 
 #else // Windows
-#error "not implemented"
+  DWORD status;
+
+  if (!GetCommModemStatus(uart->port, &status))
+    caml_failwith("failed to get all COM port modem bits");
+
+  switch (Int_val(pin))
+  {
+  case SIMPLE_UART_CTS:
+    res = Val_bool((status & MS_CTS_ON) ? 1 : 0);
+    break;
+  case SIMPLE_UART_DSR:
+    res = Val_bool((status & MS_DSR_ON) ? 1 : 0);
+    break;
+  case SIMPLE_UART_DCD:
+    res = Val_bool((status & MS_RLSD_ON) ? 1 : 0);
+    break;
+  case SIMPLE_UART_RI:
+    res = Val_bool((status & MS_RING_ON) ? 1 : 0);
+    break;
+  default:
+    caml_invalid_argument("illegal serial port's pin for getting");
+  }
 #endif
 
   CAMLreturn(res);
@@ -313,7 +449,28 @@ CAMLprim value caml_set_serial_port_pin(value unix_fd, value pin, value high)
   if (ioctl(Int_val(unix_fd), Bool_val(high) ? TIOCMBIS : TIOCMBIC, &bits) < 0)
     caml_failwith("failed to set modems bits");
 #else // Windows
-#error "not implemented"
+  HANDLE h_com_port = Handle_val(unix_fd);
+
+  DCB dcbSerialParams = {0};
+  dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
+
+  if (GetCommState(h_com_port, &dcbSerialParams) == FALSE)
+    caml_failwith("failed to get COM port state to DCB params");
+
+  switch (Int_val(pin))
+  {
+  case SERIAL_PORT_PIN_RTS:
+    dcbSerialParams.fRtsControl = Bool_val(high);
+    break;
+  case SERIAL_PORT_PIN_DTR:
+    dcbSerialParams.fDtrControl = Bool_val(high);
+    break;
+  default:
+    caml_invalid_argument("illegal serial port's pin for setting");
+  }
+
+  if (SetCommState(h_com_port, &dcbSerialParams) == FALSE)
+    caml_failwith("failed to set COM port state by DCB params");
 #endif
 
   CAMLreturn(Val_unit);
@@ -325,16 +482,16 @@ CAMLprim value caml_send_break_signal_to_serial_port(value unix_fd)
 
 #ifdef __linux__
   if (ioctl(Int_val(unix_fd), TCSBRK, 1) < 0)
-    goto fail;
+    caml_failwith("failed to send break signal to serial port");
 #elif defined(__APPLE__)
   if (tcsendbreak(Int_val(unix_fd), 1) < 0)
-    goto fail;
+    caml_failwith("failed to send break signal to serial port");
 #else // Windows
-#error "not implemented"
+  const h_com_port = HAndle_val(unix_fd);
+  SetCommBreak(h_com_port);
+  Sleep(400);
+  ClearCommBreak(h_com_port);
 #endif
-
-fail:
-  caml_failwith("failed to send break signal to serial port");
 
   CAMLreturn(Val_unit);
 }
