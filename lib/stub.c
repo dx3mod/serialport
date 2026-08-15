@@ -6,6 +6,7 @@
 #if defined(__linux__) || defined(__APPLE__)
 #include <sys/ioctl.h>
 #include <termios.h>
+#include <sys/fcntl.h>
 #else // Windows
 #endif
 
@@ -32,6 +33,29 @@ typedef enum
   ODD_PARITY,
   EVEN_PARITY
 } parity_t;
+
+value caml_open_serial_port(value port_name)
+{
+  CAMLparam1(port_name);
+  CAMLlocal1(unix_fd);
+
+#if defined(__linux__) || defined(__APPLE__)
+  const int fd = open(String_val(port_name), O_RDWR | O_NDELAY | O_NOCTTY);
+
+  if (fd == -1)
+    caml_failwith("failed to open serial port by name");
+
+  signal(SIGIO, SIG_IGN);
+  fcntl(fd, F_SETFL, 0);
+
+  unix_fd = Val_int(fd);
+
+#else // Windows
+#error "not implemented"
+#endif
+
+  CAMLreturn(unix_fd);
+}
 
 CAMLprim value caml_flush_serial_port(value unix_fd)
 {
