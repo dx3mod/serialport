@@ -6,8 +6,11 @@ module Intf = struct
 end
 
 let open_communication port_name =
-  let unix_fd = Intf.open_port port_name in
-  Descriptor.of_unix_fd ~name:port_name unix_fd
+  try
+    let unix_fd = Intf.open_port port_name in
+    Descriptor.of_unix_fd ~name:port_name unix_fd
+  with Failure _ ->
+    raise @@ Sys_error Printf.(sprintf "%s: no such serial port" port_name)
 
 let close_communication pd = Descriptor.to_unix_fd pd |> Unix.close
 

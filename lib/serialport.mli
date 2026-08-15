@@ -33,7 +33,9 @@ val open_communication : string -> Descriptor.t
 (** [open_communication port_name]
 
     Opens the serial port with the specified name and returns a serial port
-    descriptor. *)
+    descriptor.
+
+    @raise Sys_error *)
 
 val close_communication : Descriptor.t -> unit
 (** [close_communication pd]

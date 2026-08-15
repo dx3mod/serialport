@@ -52,7 +52,7 @@ val configure : t -> Configuration.t -> unit
     |> Serialport.Descriptor.configure pd
     ]}
 
-    @raise Failure if something went wrong *)
+    @raise Sys_error if something went wrong *)
 
 val configure' : t -> baud_rate:int -> string -> unit
 (** [configure' pd ~baud_rate mode]

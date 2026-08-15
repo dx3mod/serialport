@@ -39,8 +39,10 @@ module Intf = struct
 end
 
 let configure pd config =
-  pd.configuration <- Some config;
-  Intf.configure pd.fd config
+  try
+    pd.configuration <- Some config;
+    Intf.configure pd.fd config
+  with Failure msg -> raise @@ Sys_error msg
 
 let configure' pd ~baud_rate mode =
   configure pd Configuration.(of_string ~baud_rate mode)
