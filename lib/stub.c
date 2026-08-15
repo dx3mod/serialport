@@ -1,5 +1,6 @@
 #include <caml/mlvalues.h>
 #include <caml/fail.h>
+#include <caml/alloc.h>
 #include <caml/memory.h>
 
 #if defined(__linux__) || defined(__APPLE__)
@@ -50,6 +51,67 @@ CAMLprim value caml_drain_serial_port(value unix_fd)
 #error "not implemented"
 #endif
   return Val_unit;
+}
+
+value caml_get_configuration_serial_port(value unix_fd)
+{
+  CAMLparam1(unix_fd);
+  CAMLlocal1(config);
+
+  config = caml_alloc(5, 0);
+
+#if defined(__linux__) || defined(__APPLE__)
+  struct termios options;
+
+  if (tcgetattr(Int_val(unix_fd), &options) < 0)
+    caml_failwith("failed to get attributes of serial port");
+
+  Store_field(config, 0, Val_int(cfgetispeed(&options)));
+
+  {
+    uint8_t data_bits = 0;
+    if (options.c_cflag & CS8)
+      data_bits = 8;
+    else if (options.c_cflag & CS7)
+      data_bits = 7;
+    else if (options.c_cflag & CS6)
+      data_bits = 6;
+    else if (options.c_cflag & CS5)
+      data_bits = 5;
+
+    Store_field(config, 1, Val_int(data_bits));
+  }
+
+  {
+    parity_t parity = NO_PARITY;
+    if (options.c_cflag & (PARENB | PARODD))
+      parity = ODD_PARITY;
+    else if ((options.c_cflag & PARENB) && !(options.c_cflag & PARODD))
+      parity = EVEN_PARITY;
+
+    Store_field(config, 2, Val_int(parity));
+  }
+
+  {
+    const uint8_t stop_bits = (options.c_cflag & CSTOPB) ? 2 : 1;
+    Store_field(config, 3, Val_int(stop_bits));
+  }
+
+  {
+    flow_control_t flow_control = NONE_FLOW_CONTROL;
+
+    if (options.c_cflag & CRTSCTS)
+      flow_control = HARDWARE_FLOW_CONTROL;
+    else if (options.c_cflag & (IXON | IXOFF))
+      flow_control = SOFTWARE_FLOW_CONTROL;
+
+    Store_field(config, 4, Val_int(flow_control));
+  }
+#else // Windows
+#error "not implemented"
+#endif
+
+  CAMLreturn(config);
 }
 
 CAMLprim value caml_configure_serial_port(value unix_fd, value config)
@@ -192,6 +254,8 @@ CAMLprim value caml_get_serial_port_pin(value unix_fd, value pin)
     res = Val_bool((status & TIOCM_CAR) ? 1 : 0);
   case SERIAL_PORT_PIN_RI:
     res = Val_bool((status & TIOCM_RI) ? 1 : 0);
+  case SERIAL_PORT_PIN_RTS:
+    res = Val_bool((status & TIOCM_RTS) ? 1 : 0);
   default:
     caml_invalid_argument("illegal serial port's pin for getting");
   }
