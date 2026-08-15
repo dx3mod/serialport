@@ -42,6 +42,9 @@ let configure pd config =
   pd.configuration <- Some config;
   Intf.configure pd.fd config
 
+let configure' pd ~baud_rate mode =
+  configure pd Configuration.(of_string ~baud_rate mode)
+
 let configuration pd =
   match pd.configuration with
   | None ->

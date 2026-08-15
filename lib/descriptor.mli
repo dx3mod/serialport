@@ -54,6 +54,12 @@ val configure : t -> Configuration.t -> unit
 
     @raise Failure if something went wrong *)
 
+val configure' : t -> baud_rate:int -> string -> unit
+(** [configure' pd ~baud_rate mode]
+
+    Apply the configuration [mode] string to the serial port descriptor. See the
+    {!Configuration.of_string} function for details about mode string syntax. *)
+
 val configuration : t -> Configuration.t
 (** [configuration pd]
 
