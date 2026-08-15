@@ -6,12 +6,12 @@ For develop the project we using some OCaml (>= LTS version), Dune build system,
 
 First, clone the project to your local machine.
 ```console
-git clone https://github.com/dx3mod/bearbeer.git
+git clone https://github.com/dx3mod/serialport.git
 ```
 
 Secondly, install the project dependencies using the package manager.
 ```console
-opam install . --deps-only --with-test
+opam install . --deps-only --with-test --with-doc
 ```
 
 Third, build already the project and go to develop this shit.

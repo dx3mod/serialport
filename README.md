@@ -1,8 +1,43 @@
-<!-- <img src="https://gist.githubusercontent.com/dx3mod/402ef4c5f3f06645c6c7100da2e8676f/raw/31f21f19923ed2dd4a1a477d8cbbc1d06d59f07b/serialport.svg" width="170px"> -->
+<img src="https://i.ibb.co/kRmrSqJ/serportlogo-001.png" width="170"> 
 
-# serialport
+# Serialport
 
 A cross-platform library for serial port communication in OCaml, which supports both POSIX and Windows systems. 
+
+#### Comparison with OSerial library
+
+The oldest OCaml library for working with serial ports is the [OSerial] library. It is a simple and hardcoded library for POSIX serial port manipulation that only works with [Lwt]. It does not support all the necessary features and does not look like a real library, so you probably wouldn't want to use it.
+
+In comparison, Serialport offers more rich features and a cross-platform implementation (supports Linux, macOS and Windows), an agnostic I/O runtime interface, and lightweight abstractions with detailed documentation.
+
+## Quick start
+
+You can install the `serialport` library using the [OPAM] package manager or any other method you prefer.
+
+```console
+$ opam install serialport
+```
+
+You can also get the latest version of the upstream (developer) branch.
+```console
+$ opam pin serialport.dev https://github.com/dx3mod/serialport.git
+```
+
+If you are using [Dune], please add the `serialport` library to your dependencies.
+
+### In use
+
+A simple example of using a serial port to send the message "Hello World!".
+
+```ocaml
+let () = 
+  Serialport.with_open_communication "/dev/tty.uart-device" @@ fun pd ->
+  Serialport.Descriptor.configure' pd ~baud_rate:9600 "8N1";
+
+  let (_, oc) = Serialport.Descriptor.to_channels pd in 
+
+  Out_channel.output_string oc "Hello World!\n"
+```
 
 ## References
 
@@ -14,9 +49,18 @@ Other implementations
 * Rust [serialport](https://docs.rs/serialport/latest/serialport/),
 * Golang [bugst/go-serial](https://github.com/bugst/go-serial).
 
+## Credits
+
+I would like to express my deep gratitude to the author of the [Simple UART] library, from which platform-dependent code was borrowed.
+
+
 ## License
 
 The project is licensed under [the MIT License](./LICENSE), which allows for all permissions.
 Just use it and enjoy yourself without fear. We are always open to pull requests!
 
 [OSerial]: https://github.com/m-laniakea/oserial
+[Lwt]: https://github.com/ocsigen/lwt
+[Simple UART]: https://github.com/AndreRenaud/simple_uart
+[OPAM]: https://opam.ocaml.org/
+[Dune]: https://dune.build
