@@ -1,5 +1,0 @@
-(library
- (name serialport_unix)
- (public_name serialport.unix)
- (optional)
- (libraries serialport))

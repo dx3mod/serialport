@@ -1,3 +1,0 @@
-(executables
- (names unix_hello unix_reset)
- (libraries serialport.unix))

@@ -1,9 +1,3 @@
 (library
  (public_name serialport)
- (libraries
-  (re_export port_options)
-  (select
-   native_intf.ml
-   from
-   (serialport_posix -> native_intf.posix.ml)
-   (serialport_win32 -> native_intf.win32.ml))))
+ (libraries))
