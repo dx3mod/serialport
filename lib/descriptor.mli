@@ -84,7 +84,7 @@ module Modem : sig
   (** [get_data_terminal_ready pd] *)
 end
 
-(** {1 Other} *)
+(** {1 Misc} *)
 
 (** {2 Flushing} *)
 

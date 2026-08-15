@@ -1,4 +1,4 @@
-(** A module containing serial port settings *)
+(** A module containing serial port descriptor configuration settings. *)
 
 module Parity : sig
   type t = None | Odd | Even

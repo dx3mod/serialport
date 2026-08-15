@@ -1,6 +1,6 @@
 (library
  (public_name serialport)
- (libraries unix)
+ (libraries unix str)
  (foreign_stubs
   (language c)
   (names stub)))
