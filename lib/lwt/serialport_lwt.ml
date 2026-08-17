@@ -1,3 +1,6 @@
+(** {b Experimental}! *)
+
+(** The {!Serialport.Descriptor} module extension for Lwt I/O runtime. *)
 module Descriptor = struct
   let to_channels pd =
     let unix_fd = Serialport.Descriptor.to_unix_fd pd in

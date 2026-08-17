@@ -44,7 +44,7 @@ let configure pd config =
     Intf.configure pd.fd config
   with Failure msg -> raise @@ Sys_error msg
 
-let configure' pd ~baud_rate mode =
+let configure_with_mode pd ~baud_rate mode =
   configure pd Configuration.(of_string ~baud_rate mode)
 
 let configuration pd =

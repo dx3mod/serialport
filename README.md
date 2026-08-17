@@ -17,6 +17,8 @@ You can install the `serialport` library using the [OPAM] package manager or any
 ```console
 $ opam install serialport
 ```
+If you want to use the `Lwt` runtime or other concurrent I/O runtimes (that are supported by Serialport), they should already be installed on your system.
+
 
 You can also get the latest version of the upstream (developer) branch.
 ```console
@@ -38,11 +40,14 @@ let () =
   Out_channel.output_string oc "Hello World!\n"
 ```
 
-In more realistic scenarios, you would need to use a specific I/O library for your application's runtime, such as `serialport.unix` for synchronous Unix code or `serialport.lwt`.
+In more realistic scenarios, you would need to use a specific I/O library for your application's runtime, such as `serialport.unix` for synchronous Unix code or `serialport.lwt` for Lwt programming.
 
 ```ocaml
-Serialport_unix.Descriptor.write_string "Hello World!\n"
+Serialport_unix.Descriptor.write_string pd "Hello World!\n"
 ```
+
+You need to keep in mind that you are interacting with a physical device outside of the operating system, which is why there may be delays and other issues!
+
 
 For more details, see [API references](https://ocaml.org/p/serialport/latest/doc/index.html) and [`examples/`](./examples/) directory.
 
@@ -61,6 +66,11 @@ Other implementations
 
 I would like to express my deep gratitude to the author of the [Simple UART] library, from which platform-dependent code was borrowed.
 
+## Showcases
+
+Look at projects that use the Serial port library. They are good examples of how to do things.
+
+* [Burav] is a utility for burning firmware onto AVR MCUs. Uses Serialport to communicate with bootloaders and programmer devices.
 
 ## License
 
@@ -72,3 +82,4 @@ Just use it and enjoy yourself without fear. We are always open to pull requests
 [Simple UART]: https://github.com/AndreRenaud/simple_uart
 [OPAM]: https://opam.ocaml.org/
 [Dune]: https://dune.build
+[Burav]: https://github.com/dx3mod/burav

@@ -23,10 +23,7 @@ val with_open_communication : string -> (Descriptor.t -> 'a) -> 'a
 
     {[
     Serialport.with_open_communication "/dev/tty.uart-device" @@ fun pd ->
-    let _ =
-      Serialport.Configuration.of_string "8N1"
-      |> Serialport.Descriptor.configure pd
-    in
+    Serialport.Descriptor.configure_with_mode pd ~baud_rate "8N1"
     ]} *)
 
 val open_communication : string -> Descriptor.t

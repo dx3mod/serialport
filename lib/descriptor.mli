@@ -54,7 +54,7 @@ val configure : t -> Configuration.t -> unit
 
     @raise Sys_error if something went wrong *)
 
-val configure' : t -> baud_rate:int -> string -> unit
+val configure_with_mode : t -> baud_rate:int -> string -> unit
 (** [configure' pd ~baud_rate mode]
 
     Apply the configuration [mode] string to the serial port descriptor. See the
