@@ -1,5 +1,5 @@
-(** A cross-platform library for serial port communication in OCaml, which
-    supports both POSIX and Windows systems. *)
+(** A cross-platform serial port communication library for OCaml that supports
+    both POSIX and Windows systems and any concurrent I/O runtime. *)
 
 (** {1 Port descriptor} *)
 
