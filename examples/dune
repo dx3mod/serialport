@@ -1,0 +1,3 @@
+(executables
+ (names receive_data)
+ (libraries serialport.unix))
