@@ -27,7 +27,7 @@ If you are using [Dune], please add the `serialport` library to your dependencie
 
 ### In use
 
-A simple example of using a serial port to send the message "Hello World!".
+A simple example of using a serial port to send the message "Hello World!" using channels.
 
 ```ocaml
 let () = 
@@ -35,9 +35,17 @@ let () =
   Serialport.Descriptor.configure' pd ~baud_rate:9600 "8N1";
 
   let (_, oc) = Serialport.Descriptor.to_channels pd in 
-
   Out_channel.output_string oc "Hello World!\n"
 ```
+
+In more realistic scenarios, you would need to use a specific I/O library for your application's runtime, such as `serialport.unix` for synchronous Unix code or `serialport.lwt`.
+
+```ocaml
+Serialport_unix.Descriptor.write_string "Hello World!\n"
+```
+
+For more details, see [API references](https://ocaml.org/p/serialport/latest/doc/index.html) and [`examples/`](./examples/) directory.
+
 
 ## References
 
