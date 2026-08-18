@@ -7,7 +7,14 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <sys/fcntl.h>
+#include <signal.h>
 #else // Windows
+#include <windows.h>
+
+#define INITGUID      // required for GUID_DEVCLASS_PORTS, otherwise linker error @see
+                      // https://stackoverflow.com/questions/14762154/enumerating-battery-devices-c-windows
+#include <devguid.h>  // GUID_DEVCLASS_PORTS
+#include <setupapi.h> // Devices: SetupDiGetClassDevs
 #endif
 
 enum
